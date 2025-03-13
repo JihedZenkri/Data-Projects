@@ -1,0 +1,15 @@
+CALL gds.graph.project(
+  'EmployeeGraph',
+  ['Employee'],
+  'REPORTS_TO'
+  
+);
+
+// Run PageRank algorithm on 'Employee' nodes connected by 'REPORTS_TO'
+CALL gds.pageRank.stream('EmployeeGraph')
+YIELD nodeId, score
+
+// Retrieve employeeID and score for each 'Employee' node
+WITH gds.util.asNode(nodeId) AS employee, score
+RETURN employee.employeeID AS employeeID, score
+ORDER BY score DESC, employeeID ASC;
